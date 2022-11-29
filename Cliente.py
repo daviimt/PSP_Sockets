@@ -7,10 +7,10 @@ aciertos = 0
 
 def register():
     global s
-    email = input("Introduce email: ")
-    psw = pwinput.pwinput(prompt='Intorduce contraseña: ')
+    print('Registrar usuario:')
+    email = input("Email: ")
+    psw = pwinput.pwinput(prompt='Contraseña: ')
     psw2 = pwinput.pwinput(prompt='Repite contraseña: ')
-    
     if(psw == psw2):
         if (validEmail(email)):
             cad = "reg;" + email + ";" + psw
@@ -27,14 +27,14 @@ def register():
 
 def login():
     global log, s
-    print('Inicia sesión: ')
-    email = input('Introduce email: ')
-    psw = pwinput.pwinput(prompt='Intorduce contraseña: ')
+    print('Iniciar sesión: ')
+    email = input('Email: ')
+    psw = pwinput.pwinput(prompt='Contraseña: ')
     cad = "log;" + email + ";" + psw
     s.send(cad.encode())
     r = s.recv(1024).decode()
     if (r == "True"):
-        print("Login correcto.")
+        print("Sesión iniciada con éxito.")
         log = True
     else:
         print("El email o la contraseña no son válidos.")
@@ -44,7 +44,7 @@ def validEmail(correo):
     return re.match(expresion_regular, correo)
 
 def listJug(jug, nom):
-    c = "Tus oponentes son: "
+    c = "Jugadores: "
     for j in jug:
         if j != nom:
             c = c + j + ","
@@ -55,14 +55,17 @@ s.connect(("localhost", 9999))
 
 # Seguirá pidiendo email y contraseña mientras el login o el register sea incorrecto.
 while log != True:
-    opcion = input("Introduzca cualquier tecla para iniciar sesión, o pulse \'r\' para registrarse en el sistema: ")
-    if (opcion == "r"):
+    print('Selecciona una opción:')
+    opcion = input('1. Registrar usuario.\n2. Iniciar sesión.\n')
+    if (opcion == '1'):
         register()
-    else:
+    elif(opcion == '2'):
         login()
+    else:
+        print('Opción incorrecta')
 
 # Nombre para mostrar como nick
-nick = input("Introduce tu nick para la partida: ")
+nick = input("Introduce tu nick: ")
 s.send(nick.encode())
 print("Esperando que se conecten jugadores. Esto puede tardar varios minutos...")
 datos = s.recv(1024).decode()

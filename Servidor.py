@@ -1,7 +1,7 @@
 import threading, socket, os, random, operator
 from pathlib import Path
 
-# Variables necesarias.
+# Variables globales.
 jugadores = {}
 nClientes = 0
 mutex = threading.Lock()
