@@ -1,5 +1,5 @@
-import socket
-import re
+import socket, re
+import pwinput
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 opcion = ""
 log = False
@@ -8,8 +8,8 @@ aciertos = 0
 def register():
     global s
     email = input("Introduce email: ")
-    psw = input("Introduce contraseña: ")
-    psw2 = input("Repite contraseña: ")
+    psw = pwinput.pwinput(prompt='Intorduce contraseña: ')
+    psw2 = pwinput.pwinput(prompt='Repite contraseña: ')
     
     if(psw == psw2):
         if (validEmail(email)):
@@ -29,7 +29,7 @@ def login():
     global log, s
     print('Inicia sesión: ')
     email = input('Introduce email: ')
-    psw = input('Introduce contraseña: ')
+    psw = pwinput.pwinput(prompt='Intorduce contraseña: ')
     cad = "log;" + email + ";" + psw
     s.send(cad.encode())
     r = s.recv(1024).decode()
