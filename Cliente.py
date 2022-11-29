@@ -66,7 +66,6 @@ nick = input("Introduce tu nick para la partida: ")
 s.send(nick.encode())
 print("Esperando que se conecten jugadores. Esto puede tardar varios minutos...")
 datos = s.recv(1024).decode()
-print(datos)
 array = datos.split("$")
 jug = array[0].split("&")
 listJug(jug, nick)
@@ -86,7 +85,19 @@ print("Has acertado "+ str(aciertos) + "preguntas!")
 s.send(str(aciertos).encode())
 strPuntos = s.recv(1024).decode()
 puntos = strPuntos.split(";")
-print("RANKING:")
+ganador = puntos[0]
+
+# print("PUNTOS: ",puntos)
+# print("GANADOR: ",ganador)
+# print("NICK: ",nick)
+
+if(ganador == nick):
+    print('Has ganado!!')
+else:
+    print('Has perdido...')
+
+print('RANKING:')
 for punt in puntos:
     print(punt)
-print("Fin de la partida.")
+
+print('Fin de la partida.')

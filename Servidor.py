@@ -43,7 +43,7 @@ class Cliente(threading.Thread):
         
         # Nick del cliente para la partida.
         self.nombre = self.socket.recv(1024).decode()
-        print(self.nombre+" Registrado")
+        print(self.nombre,'ha iniciado sesión')
         sem.acquire()
         while enCurso:
             pass
@@ -77,7 +77,7 @@ class Cliente(threading.Thread):
         
         # Aquí se mandan las preguntas y los jugadores contrarios
         self.socket.send(cadena.encode())
-        print(self.nombre + " inicia el juego.")
+        print(self.nombre ,'comienza la partida')
         
         #Aquí termina la partida
         mutex.acquire()

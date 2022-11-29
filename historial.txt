@@ -1,4 +1,4 @@
-davilin;3;
-nacho;2;
-martita;0;
-ruben;0;
+marta;9;
+david;9;
+nacho;9;
+ruben;9;
