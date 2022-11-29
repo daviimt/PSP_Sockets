@@ -179,6 +179,8 @@ def validarRegister(email, passw):
 # Método para comprobar si el login es correcto.
 def validarLogin(email, passw):
     global mutex
+    if(os.path.exists('./usuarios.txt')== False):
+        open('./usuarios.txt','w')
     fichero = open("./usuarios.txt", "r")
     logCorrect = False
     for linea in fichero:
