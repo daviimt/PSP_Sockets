@@ -1,10 +1,13 @@
 import socket, re
 import pwinput
+
+# Variables globales
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 opcion = ""
 log = False
 aciertos = 0
 
+# Método para registrar usuarios a través del email y su contraseña
 def register():
     global s
     print('Registrar usuario:')
@@ -25,6 +28,7 @@ def register():
     else:
         print("Las contraseñas no coinciden.")
 
+# Método para iniciar sesión en cuentas ya registradas escribiendo email y contraseña
 def login():
     global log, s
     print('Iniciar sesión: ')
@@ -39,10 +43,12 @@ def login():
     else:
         print("El email o la contraseña no son válidos.")
 
+# Método para declarar un email válido a través de expresiones regulares
 def validEmail(correo):
     expresion_regular = r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+'
     return re.match(expresion_regular, correo)
 
+# Método que definirá la lista de jugadores
 def listJug(jug, nom):
     c = "Jugadores: "
     for j in jug:
@@ -64,10 +70,13 @@ while log != True:
     else:
         print('Opción incorrecta')
 
-# Nombre para mostrar como nick
+# Fragmento de código que se encargará de recoger y usar tu nick y te mostrará un mensaje hasta que la partida pueda iniciarse
 nick = input("Introduce tu nick: ")
 s.send(nick.encode())
 print("Esperando que se conecten jugadores. Esto puede tardar varios minutos...")
+
+# Fragmento de código que sen encarga de repartir 5 preguntas al jugador de forma que si este acierta se le suma un punto. Al terminar
+# de responder todas sus preguntas, se le comunicará el número de aciertos totales que ha tenido
 datos = s.recv(1024).decode()
 array = datos.split("$")
 jug = array[0].split("&")
@@ -88,8 +97,9 @@ print("Has acertado "+ str(aciertos) + "preguntas!")
 s.send(str(aciertos).encode())
 strPuntos = s.recv(1024).decode()
 puntos = strPuntos.split(";")
-ganador = puntos[0].split(' ')
 
+# Fragmento de código el cual te comunicará si has ganado/perdido, el ranking final de la partida y su finalización
+ganador = puntos[0].split(' ')
 if(ganador[0] == nick):
     print('Has ganado!!')
 else:

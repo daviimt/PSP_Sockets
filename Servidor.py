@@ -1,7 +1,7 @@
 import threading, socket, os, random, operator
 from pathlib import Path
 
-# Variables globales.
+# Variables globales
 jugadores = {}
 nClientes = 0
 mutex = threading.Lock()
@@ -12,7 +12,7 @@ enCurso = False
 preguntas = open("./preguntas.txt", "r", encoding="utf8").readlines()
 trivial = list()
 
-# Clase Cliente que hereda de Thread.
+# Clase Cliente
 class Cliente(threading.Thread):
     
     def __init__(self, socket_cliente, datos_cliente) -> None:
@@ -41,7 +41,7 @@ class Cliente(threading.Thread):
             else:
                 self.socket.send("False".encode())
         
-        # Nick del cliente para la partida.
+        # Nick del jugador para la partida.
         self.nombre = self.socket.recv(1024).decode()
         print(self.nombre,'ha iniciado sesión')
         sem.acquire()
@@ -64,7 +64,7 @@ class Cliente(threading.Thread):
         mutex.acquire()
         self.trivial = trivial
         
-        #Aquí se inicia la partida
+        # Inicio de la partida
         j = jugadores.keys()
         jug = "&".join(j)
         pregunta = str()
@@ -75,20 +75,19 @@ class Cliente(threading.Thread):
         enCurso = True
         mutex.release()
         
-        # Aquí se mandan las preguntas y los jugadores contrarios
+        # Se mandan las preguntas y los jugadores contrarios informando de ello a través de un mensaje
         self.socket.send(cadena.encode())
         print(self.nombre ,'comienza la partida')
         
-        #Aquí termina la partida
+        # Finalización de la partida
         mutex.acquire()
         puntos = self.socket.recv(1024).decode()
         jugadores[self.nombre] = puntos
         
-        # Aquí se reciben los resultados y se vuelcan en un array
+        # Recepción de los resultados y vuelco en un array
         contSem = contSem + 1
         
-        # El último jugador (el que pone el contSem a 4), es el que reinicia las variables,
-        # ordena el array de jugadores y muestra la clasificación historial en el servidor.
+        # El último jugador reinicia las variables, ordena el array de jugadores y muestra la clasificación historial en el servidor.
         cad = ""
         dicGen = {}
         jugadoresOrd = list()
@@ -115,7 +114,6 @@ class Cliente(threading.Thread):
                 s = "{}".format(jugador[1][0]) + " - " + "{}".format(jugadores[jugador[1][0]]) + " puntos"
                 cad = cad + str(s) + ";"
                 
-            #dicGen = sorted(dicGen.items(), key= operator.itemgetter(1), reverse=True)
             historial = open("./historial.txt", "w")
             for k, v in dicGen.items():
                 s = str(k) + ";" + str(v) + ";"
@@ -126,11 +124,12 @@ class Cliente(threading.Thread):
             enCurso = False
         mutex.release()
         
-        # Con este bucle Hacemos esperar a los hilos que ya han terminado para que el array de puntuaciones esté completo.
+        # Este bucle hacemos que los hilos que ya han finalizado esperen para que el array con las puntuaciones
+        # contenga las puntuaciones de todos los participantes
         while enCurso:
             pass
         
-        # Se mandan las puntuaciones a cada jugador y se reinicia el array de jugadores.
+        # Se mandan las puntuaciones a cada jugador y se reinicia el array de jugadores
         mutex.acquire()
         if cad[len(cad)-1] == ";":
             cad = cad[:-1]
@@ -139,10 +138,11 @@ class Cliente(threading.Thread):
         jugadoresOrd.clear()
         mutex.release()
         
-        # Finalmente salen del semáforo y se inicia una nueva partida.
+        # Finalmente los usuarios salen del semáforo y se inicia una nueva partida.
         sem.release()
         print("Desconectado: " + str(self.datos))
 
+# Método el cual nos permite leer el historial del juego para ser mostrado en el servidor.
 def mostrarhistorial():
     historial = open("./historial.txt", "r")
     dicPun = {}
@@ -155,7 +155,7 @@ def mostrarhistorial():
         s = "Jugador: " + "{}".format(j[1][0]) + " - Puntos:" + "{}".format(dicPun[j[1][0]])
         print(s)
 
-# Método para hacer un registro de email y contraseña si el email no existe.
+# Método para hacer un registro de un usuario a través de su correo y contraseña si ese email no existe.
 def validarRegister(email, passw):
     global mutex
     mutex.acquire()
@@ -176,7 +176,7 @@ def validarRegister(email, passw):
     mutex.release()
     return noExiste
 
-# Método para comprobar si el login es correcto.
+# Método que crea un dichero usuarios.txt si este no existe y comprueba si el login es correcto leyendo los datos de este fichero.
 def validarLogin(email, passw):
     global mutex
     if(os.path.exists('./usuarios.txt')== False):
@@ -191,13 +191,12 @@ def validarLogin(email, passw):
     return logCorrect
 
 if __name__ == "__main__":
-    # Conexión.
     servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     servidor.bind(("localhost", 9999))
     servidor.listen(1)
 
     while True:
-        # Se espera a un cliente.
+        # Se espera a que un cliente se conecte.
         socket_cliente, datos_cliente = servidor.accept()
         
         print("Conectado "+str(datos_cliente))
