@@ -85,13 +85,9 @@ print("Has acertado "+ str(aciertos) + "preguntas!")
 s.send(str(aciertos).encode())
 strPuntos = s.recv(1024).decode()
 puntos = strPuntos.split(";")
-ganador = puntos[0]
+ganador = puntos[0].split(' ')
 
-# print("PUNTOS: ",puntos)
-# print("GANADOR: ",ganador)
-# print("NICK: ",nick)
-
-if(ganador == nick):
+if(ganador[0] == nick):
     print('Has ganado!!')
 else:
     print('Has perdido...')
