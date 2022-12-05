@@ -45,7 +45,7 @@ def login():
 
 # Método para declarar un email válido a través de expresiones regulares
 def validEmail(correo):
-    expresion_regular = '([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+'
+    expresion_regular = r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+'
     return re.match(expresion_regular, correo)
 
 # Método que definirá la lista de jugadores
